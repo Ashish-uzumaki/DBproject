@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
 
-public class TransactionDAO_JDBC implements CustomerDAO {
+public class TransactionDAO_JDBC implements TransactionDAO {
 	Connection dbConnection;
 
 	public Transaction_JDBC(Connection dbconn){
@@ -68,32 +68,37 @@ public class TransactionDAO_JDBC implements CustomerDAO {
  		}
 	}
 	@Override
-	public void getTansactionDetails(int customerid) {
-		PreparedStatement preparedStatement = null;
+	public ArrayList<Transaction> getTansactionByAccount(Account s) {
 		String sql;
-		sql = "";
-		try {
-			preparedStatement = dbConnection.prepareStatement(sql);
-
-			preparedStatement.setInt(1, Transaction.getTransactionId());
-			preparedStatement.setString(2, Transaction.getDate());
-      preparedStatement.setString(3, Transaction.getAccountNo());
-      preparedStatement.setString(4, Transaction.getAmount());
-			// execute insert SQL stetement
-			preparedStatement.executeUpdate();
-
-			System.out.println("Transaction added to the database");
-		} catch (SQLException e) {
- 			System.out.println(e.getMessage());
- 		}
-
+		Statement stmt = null;
+		ArrayList<Transaction> TransactionList = new ArrayList<Transaction>();
 		try{
-			if (preparedStatement != null) {
-				preparedStatement.close();
-			}
-		} catch (SQLException e) {
- 			System.out.println(e.getMessage());
- 		}
-	}
+			stmt = dbConnection.createStatement();
+			sql = "SELECT * FROM Transaction WHERE transaction_accountnumber = (?)";
+			stmt.setInt(1, s.getAccountNo());
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next()){
+				//Retrieve by column name
+				Transaction t = new Transaction();
+				int transaction_id  = rs.getInt("transaction_id ");
+				int transaction_accountnumber = rs.getInt("transaction_accountnumber");
+				String transactiondate=rs.getString("transactiondate");
+				int amount = rs.getInt("amount");
 
+				t.setDate(transactiondate);
+				t.setTransactionID(transaction_id);
+				t.setAccountNo(transaction_accountnumber);
+				t.setAmount(amount);
+
+				TransactionList.add(t);
+				// Add exception handling here if more than one row is returned
+			}
+			return TransactionList;
+		} catch (SQLException ex) {
+				System.out.println("SQLException: " + ex.getMessage());
+				System.out.println("SQLState: " + ex.getSQLState());
+				System.out.println("VendorError: " + ex.getErrorCode());
+		}
+		// Add exception handling when there is no matching record
+		return null;
 }

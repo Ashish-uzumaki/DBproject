@@ -8,4 +8,7 @@ public interface CustomerDAO {
   public Customer getCustomerById(int customer_id);
   public List<Customer> findAll();
   public List<Customer> getCustomerByName();
+	public ArrayList<Transaction> getTransactionDetails(int customer_id);
+	public ArrayList<Loan> getLoanDetails(int customer_id);
+	public ArrayList<Account> getAllAccounts(int customer_id);
 }

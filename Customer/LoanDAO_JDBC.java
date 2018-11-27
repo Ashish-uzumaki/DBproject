@@ -53,48 +53,48 @@ public class LoanDAO_JDBC implements LoanDAO {
     return new Loan();
 	}
 
-	@Override
-	public Loan getLoanByAccount(Account account) {
-		String sql;
-		Statement stmt = null;
-		int accountnumber = account.getAccountNumber();
-		ArrayList<Loan> loans = new ArrayList<Loan>();
-		try{
-			stmt = dbConnection.createStatement();
-			sql = "select * from Loan where accountnumber=" + accountnumber;
-			ResultSet rs = stmt.executeQuery(sql);
-
-			//STEP 5: Extract data from result set
-
-			while(rs.next()){
-				//Retrieve by column name
-				Loan s = new Loan();
-				int loan_id  = rs.getInt("loan_id");
-				int  amount = rs.getInt("amount");
-				String type=rs.getString("type");
-				int account_id=rs.getInt("loan_account_id");
-				int manager_id=rs.getInt("loan_manager_id");
-
-				s.setId(loan_id);
-				s.setAmount(amount);
-				s.setType(type);
-				s.setAccountId(account_id);
-				s.setManagerId(manager_id);
-
-				loans.add(s);
-				// Add exception handling here if more than one row is returned
-			}
-			return loans;
-		}
-		catch (SQLException ex) {
-		    // handle any errors
-		    System.out.println("SQLException: " + ex.getMessage());
-		    System.out.println("SQLState: " + ex.getSQLState());
-		    System.out.println("VendorError: " + ex.getErrorCode());
-		}
-		// Add exception handling when there is no matching record
-    return new Loan();
-	}
+	// @Override
+	// public Loan getLoanByAccount(Account account) {
+	// 	String sql;
+	// 	Statement stmt = null;
+	// 	int accountnumber = account.getAccountNumber();
+	// 	ArrayList<Loan> loans = new ArrayList<Loan>();
+	// 	try{
+	// 		stmt = dbConnection.createStatement();
+	// 		sql = "select * from Loan where accountnumber=" + accountnumber;
+	// 		ResultSet rs = stmt.executeQuery(sql);
+	//
+	// 		//STEP 5: Extract data from result set
+	//
+	// 		while(rs.next()){
+	// 			//Retrieve by column name
+	// 			Loan s = new Loan();
+	// 			int loan_id  = rs.getInt("loan_id");
+	// 			int  amount = rs.getInt("amount");
+	// 			String type=rs.getString("type");
+	// 			int account_id=rs.getInt("loan_account_id");
+	// 			int manager_id=rs.getInt("loan_manager_id");
+	//
+	// 			s.setId(loan_id);
+	// 			s.setAmount(amount);
+	// 			s.setType(type);
+	// 			s.setAccountId(account_id);
+	// 			s.setManagerId(manager_id);
+	//
+	// 			loans.add(s);
+	// 			// Add exception handling here if more than one row is returned
+	// 		}
+	// 		return loans;
+	// 	}
+	// 	catch (SQLException ex) {
+	// 	    // handle any errors
+	// 	    System.out.println("SQLException: " + ex.getMessage());
+	// 	    System.out.println("SQLState: " + ex.getSQLState());
+	// 	    System.out.println("VendorError: " + ex.getErrorCode());
+	// 	}
+	// 	// Add exception handling when there is no matching record
+  //   return new Loan();
+	// }
 
 	@Override
 	public void applyLoan(Loan a) {

@@ -6,4 +6,6 @@ public interface LoanDAO {
 	public void CreateAccount(Account a);
 	public void DeductMoney(int accno,int amount);
 	public void AddMoney(int accno,int amount);
+	public ArrayList<Transaction> getTransactions(Account account);
+	public ArrayList<Loan> getLoans(Account account);
 }

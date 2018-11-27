@@ -126,13 +126,14 @@ public class CustomerDAO_JDBC implements CustomerDAO {
 				AccountList.add(s);
 				// Add exception handling here if more than one row is returned
 			}
+			return AccountList;
 		} catch (SQLException ex) {
 				System.out.println("SQLException: " + ex.getMessage());
 				System.out.println("SQLState: " + ex.getSQLState());
 				System.out.println("VendorError: " + ex.getErrorCode());
 		}
+		return null;
 		// Add exception handling when there is no matching record
-		return s;
 	}
 
 	@Override
@@ -141,39 +142,31 @@ public class CustomerDAO_JDBC implements CustomerDAO {
 		Statement stmt = null;
 		ArrayList<Loan> loanList = new ArrayList<Loan>();
 		ArrayList<Account> accountlist = getAllAccounts(customer_id);
+		AccountDAO_JDBC acc =new AccountDAO_JDBC();
 		for(auto s:accountlist){
-			try{
-				stmt = dbConnection.createStatement();
-				sql = "SELECT * FROM Loan WHERE accountnumber = (?)";
-				stmt.setInt(1, customer_id);
-				ResultSet rs = stmt.executeQuery(sql);
-				while(rs.next()){
-					//Retrieve by column name
-					Account s = new Account();
-					int account_customer_id  = rs.getInt("account_customer_id");
-					int accountnumber = rs.getInt("accountnumber");
-					Date createdate=rs.getString("createddate");
-					int branch_id=rs.getInt("account_branch_id");
-					int balance = rs.getInt("balance")
-
-					s.setCustomerID(account_customer_id);
-					s.setAccountNumber(accountnumber);
-					s.setDate(createdate);
-					s.setBranchId(branch_id);
-					s.setBalance(balance);
-
-					AccountList.add(s);
-					// Add exception handling here if more than one row is returned
-				}
-			} catch (SQLException ex) {
-					System.out.println("SQLException: " + ex.getMessage());
-					System.out.println("SQLState: " + ex.getSQLState());
-					System.out.println("VendorError: " + ex.getErrorCode());
-			}
+			ArrayList<Loan> l = new ArrayList<Loan>();
+			l=acc.getLoans(s);
+			loanList.addAll(l);
 		}
 		// Add exception handling when there is no matching record
 		return loanList;
 	}
+
+	@Override
+	public ArrayList<Transaction> getTransactionDetails(int customer_id) {
+		String sql;
+		Statement stmt = null;
+		ArrayList<Transaction> transList = new ArrayList<Transaction>();
+		ArrayList<Account> accountlist = getAllAccounts(customer_id);
+		AccountDAO_JDBC acc =new AccountDAO_JDBC();
+		for(auto s:accountlist){
+			ArrayList<Transaction> t = acc.getTransactions(s);
+			transList.addAll(t);
+		}
+		// Add exception handling when there is no matching record
+		return transList;
+	}
+
 
   @Override
 	public void deleteCustomer(int customer_id) {
