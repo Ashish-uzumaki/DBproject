@@ -67,18 +67,26 @@ public class TransactionDAO_JDBC implements CustomerDAO {
  			System.out.println(e.getMessage());
  		}
 	}
+	@Override
+	public void getTansactionDetails(int customerid) {
+		PreparedStatement preparedStatement = null;
+		String sql;
+		sql = "";
+		try {
+			preparedStatement = dbConnection.prepareStatement(sql);
 
-  @Override
-	public void deleteTransaction(int transaction_id) {
-    PreparedStatement stmt = null;
-    try {
-      stmt = conn.prepareStatement("DELETE FROM Transaction WHERE id=(?)");
-      stmt.setInt(1, transaction_id);
-      stmt.executeUpdate();
-      System.out.println("Deleted row successfully.");
-    } catch (SQLException e) {
+			preparedStatement.setInt(1, Transaction.getTransactionId());
+			preparedStatement.setString(2, Transaction.getDate());
+      preparedStatement.setString(3, Transaction.getAccountNo());
+      preparedStatement.setString(4, Transaction.getAmount());
+			// execute insert SQL stetement
+			preparedStatement.executeUpdate();
+
+			System.out.println("Transaction added to the database");
+		} catch (SQLException e) {
  			System.out.println(e.getMessage());
  		}
+
 		try{
 			if (preparedStatement != null) {
 				preparedStatement.close();
@@ -87,4 +95,5 @@ public class TransactionDAO_JDBC implements CustomerDAO {
  			System.out.println(e.getMessage());
  		}
 	}
+
 }

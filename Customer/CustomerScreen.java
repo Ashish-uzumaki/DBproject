@@ -12,17 +12,21 @@ public class CustomerScreen{
 			daoFactory.activateConnection();
 
 			CustomerDAO cdao = daoFactory.getCustomerDAO();
-      // LoanDAO cdao = daoFactory.getLoanDAO();
-      // AccountDAO cdao = daoFactory.getAccountDAO();
-      // EnsuranceDAO cdao = daoFactory.getEnsuranceDAO();
+      LoanDAO dao = daoFactory.getLoanDAO();
+      AccountDAO adao = daoFactory.getAccountDAO();
+      EnsuranceDAO edao = daoFactory.getEnsuranceDAO();
+      Transaction tdao = daoFactory.getTransactionDAO();
       boolean cnt = true;
+      System.out.println("Insert Customer_ID:");
+      int id = scan.nextInt();
       do {
         System.out.println("Which operation would you like to perform:");
-        System.out.println("1: Transaction details");//Customer transaction table
+        System.out.println("1: Previous Transaction details");//Customer transaction table
         System.out.println("2: Account details");//Account table
         System.out.println("3: Loan details");//Loan table
         System.out.println("4: Ensurance details");//ensurance table
-        System.out.println("5: Quit");
+        System.out.println("5: Transfer Money");//transaction table
+        System.out.println("6: Quit");
         System.out.print("Your option: ");
 
         int opt = scan.nextInt();
@@ -30,15 +34,23 @@ public class CustomerScreen{
 
         switch(opt) {
           case 1:
+            tdao.getTransactionDetails(id);
             break;
 
           case 2:
+            adao.getAccountDetails(id);
             break;
 
           case 3:
+            ldao.getLoanDetails(id);
             break;
 
           case 4:
+            cdao.getEnsuranceDetails(id);
+            break;
+
+          case 5:
+            tdao.DoTransfer(id);
             break;
 
           case 6:
@@ -47,7 +59,6 @@ public class CustomerScreen{
 
           default:
             System.out.println("Incorrect option.");
-
         }
         System.out.println();
       } while (cnt);

@@ -98,6 +98,83 @@ public class CustomerDAO_JDBC implements CustomerDAO {
  		}
 	}
 
+	@Override
+	public ArrayList<Account> getAllAccounts(int customer_id) {
+		String sql;
+		Statement stmt = null;
+		ArrayList<Account> AccountList = new ArrayList<Account>();
+		try{
+			stmt = dbConnection.createStatement();
+			sql = "SELECT * FROM Account WHERE customer_id = (?)";
+			stmt.setInt(1, customer_id);
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next()){
+				//Retrieve by column name
+				Account s = new Account();
+				int account_customer_id  = rs.getInt("account_customer_id");
+				int accountnumber = rs.getInt("accountnumber");
+				Date createdate=rs.getString("createddate");
+				int branch_id=rs.getInt("account_branch_id");
+				int balance = rs.getInt("balance")
+
+				s.setCustomerID(account_customer_id);
+				s.setAccountNumber(accountnumber);
+				s.setDate(createdate);
+				s.setBranchId(branch_id);
+				s.setBalance(balance);
+
+				AccountList.add(s);
+				// Add exception handling here if more than one row is returned
+			}
+		} catch (SQLException ex) {
+				System.out.println("SQLException: " + ex.getMessage());
+				System.out.println("SQLState: " + ex.getSQLState());
+				System.out.println("VendorError: " + ex.getErrorCode());
+		}
+		// Add exception handling when there is no matching record
+		return s;
+	}
+
+	@Override
+	public ArrayList<Loan> getLoanDetails(int customer_id) {
+		String sql;
+		Statement stmt = null;
+		ArrayList<Loan> loanList = new ArrayList<Loan>();
+		ArrayList<Account> accountlist = getAllAccounts(customer_id);
+		for(auto s:accountlist){
+			try{
+				stmt = dbConnection.createStatement();
+				sql = "SELECT * FROM Loan WHERE accountnumber = (?)";
+				stmt.setInt(1, customer_id);
+				ResultSet rs = stmt.executeQuery(sql);
+				while(rs.next()){
+					//Retrieve by column name
+					Account s = new Account();
+					int account_customer_id  = rs.getInt("account_customer_id");
+					int accountnumber = rs.getInt("accountnumber");
+					Date createdate=rs.getString("createddate");
+					int branch_id=rs.getInt("account_branch_id");
+					int balance = rs.getInt("balance")
+
+					s.setCustomerID(account_customer_id);
+					s.setAccountNumber(accountnumber);
+					s.setDate(createdate);
+					s.setBranchId(branch_id);
+					s.setBalance(balance);
+
+					AccountList.add(s);
+					// Add exception handling here if more than one row is returned
+				}
+			} catch (SQLException ex) {
+					System.out.println("SQLException: " + ex.getMessage());
+					System.out.println("SQLState: " + ex.getSQLState());
+					System.out.println("VendorError: " + ex.getErrorCode());
+			}
+		}
+		// Add exception handling when there is no matching record
+		return loanList;
+	}
+
   @Override
 	public void deleteCustomer(int customer_id) {
     PreparedStatement stmt = null;
