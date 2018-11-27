@@ -22,13 +22,13 @@ public class TransactionDAO_JDBC implements CustomerDAO {
 			sql = "SELECT * FROM Transaction WHERE transaction_id = (?)";
       stmt.setInt(1, transaction_id);
 			ResultSet rs = stmt.executeQuery(sql);
-			String date = rs.getDate("date");
+			String date = rs.getDate("transactiondate");
       int amount = rs.getAmount("amount");
-      String address = rs.getString("address");
-      int transaction_id  = rs.getInt("customer_id");
+      String account_no = rs.getString("transaction_accountnumber");
+      int transaction_id  = rs.getInt("transaction_id");
       s.setDate(date);
 			s.setAmount(amount);
-      s.setAccountNo(account);
+      s.setAccountNo(account_no);
       s.setTransactionID(transaction_id);
 		} catch (SQLException ex) {
 		    System.out.println("SQLException: " + ex.getMessage());
@@ -43,15 +43,14 @@ public class TransactionDAO_JDBC implements CustomerDAO {
 	public void addTransaction(Transaction Transaction) {
 		PreparedStatement preparedStatement = null;
 		String sql;
-		sql = "insert into Transaction(customer_id, name, address, contact) values (?,?,?,?)";
-
+		sql = "insert into Transaction(transaction_id, transactiondate, transaction_accountnumber,amount ) values (?,?,?,?)";
 		try {
 			preparedStatement = dbConnection.prepareStatement(sql);
 
-			preparedStatement.setInt(1, Transaction.getcustomer_id());
-			preparedStatement.setString(2, Transaction.getName());
-      preparedStatement.setString(3, Transaction.getAddress());
-      preparedStatement.setString(4, Transaction.getContact());
+			preparedStatement.setInt(1, Transaction.getTransactionId());
+			preparedStatement.setString(2, Transaction.getDate());
+      preparedStatement.setString(3, Transaction.getAccountNo());
+      preparedStatement.setString(4, Transaction.getAmount());
 			// execute insert SQL stetement
 			preparedStatement.executeUpdate();
 
@@ -70,40 +69,11 @@ public class TransactionDAO_JDBC implements CustomerDAO {
 	}
 
   @Override
-	public void updateCustomer(int customer_id) {
-    static final Scanner scan = new Scanner(System.in);
-		PreparedStatement preparedStatement = null;
-		String sql;
-    try{
-    System.out.print("New name: ");
-    String newName = scan.nextLine();
-    System.out.print("New contact: ");
-    String newContact = scan.nextLine();
-    System.out.print("New address: ");
-    String newAddress = scan.nextLine();
-    stmt = conn.prepareStatement("UPDATE Transaction SET name=(?), contact=(?), address=(?) WHERE customer_id=(?)");
-    stmt.setInt(4, id);
-    stmt.setString(1, newName);
-    stmt.setString(2, newContact);
-    stmt.setString(3, newAddress);
-		} catch (SQLException e) {
- 			System.out.println(e.getMessage());
- 		}
-		try{
-			if (preparedStatement != null) {
-				preparedStatement.close();
-			}
-		} catch (SQLException e) {
- 			System.out.println(e.getMessage());
- 		}
-	}
-
-  @Override
-	public void deleteCustomer(int customer_id) {
+	public void deleteTransaction(int transaction_id) {
     PreparedStatement stmt = null;
     try {
       stmt = conn.prepareStatement("DELETE FROM Transaction WHERE id=(?)");
-      stmt.setInt(1, customer_id);
+      stmt.setInt(1, transaction_id);
       stmt.executeUpdate();
       System.out.println("Deleted row successfully.");
     } catch (SQLException e) {
