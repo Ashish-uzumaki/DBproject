@@ -42,15 +42,15 @@ public class CustomerScreen{
             break;
 
           case 3:
-            // cdao.getLoanDetails(id);
+            cdao.getLoanDetails(id);
             break;
 
           case 4:
-            // cdao.getEnsuranceDetails(id);
+            cdao.getEnsuranceDetails(id);
             break;
 
           case 5:
-            // cdao.DoTransfer(id);
+            cdao.DoTransfer(id);
             break;
 
           case 6:

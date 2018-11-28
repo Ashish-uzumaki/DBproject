@@ -7,8 +7,6 @@ public class AccountDAO_JDBC implements AccountDAO {
 	Connection dbConnection;
 
 	public AccountDAO_JDBC(Connection dbconn){
-		// JDBC driver name and database URL
- 		//  Database credentials
 		dbConnection = dbconn;
 	}
 
@@ -23,9 +21,8 @@ public class AccountDAO_JDBC implements AccountDAO {
 			sql = "select * from Account where accountnumber=" + accno;
 			ResultSet rs = stmt.executeQuery(sql);
 
-			//STEP 5: Extract data from result set
+
 			while(rs.next()){
-				//Retrieve by column name
 				float balance  = rs.getFloat("balance");
 				int  accountnumber = rs.getInt("accountnumber");
 				int account_branch_id = rs.getInt("account_branch_id");
@@ -37,9 +34,7 @@ public class AccountDAO_JDBC implements AccountDAO {
 				// a.setDate(date);
 				a.setCustomerID(account_customer_id);
 				a.setBranchID(account_branch_id);
-
 				break;
-				// Add exception handling here if more than one row is returned
 			}
 			return a;
 		}
@@ -49,7 +44,6 @@ public class AccountDAO_JDBC implements AccountDAO {
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("VendorError: " + ex.getErrorCode());
 		}
-		// Add exception handling when there is no matching record
     return new Account();
 	}
 
