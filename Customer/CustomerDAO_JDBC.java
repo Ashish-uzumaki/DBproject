@@ -1,35 +1,34 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
+import java.util.*;
 
 public class CustomerDAO_JDBC implements CustomerDAO {
 	Connection dbConnection;
+	static final Scanner scan = new Scanner(System.in);
 
 	public CustomerDAO_JDBC(Connection dbconn){
 		dbConnection = dbconn;
 	}
-	static final Scanner scan = new Scanner(System.in);
 
 	@Override
 	public Customer getCustomerById(int customer_id) {
 
 		Customer s = new Customer();
-		String sql;
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 
 		try{
-			stmt = dbConnection.createStatement();
-			sql = "SELECT * FROM Customer WHERE customer_id = (?)";
+			stmt = dbConnection.prepareStatement("SELECT * FROM Customer WHERE customer_id = (?)");
       stmt.setInt(1, customer_id);
-			ResultSet rs = stmt.executeQuery(sql);
+			ResultSet rs = stmt.executeQuery();
 			String name = rs.getString("name");
       String contact = rs.getString("contact");
       String address = rs.getString("address");
-      int customer_id  = rs.getInt("customer_id");
+      int custom_id  = rs.getInt("customer_id");
       s.setName(name);
 			s.setContact(contact);
       s.setAddress(address);
-      s.setCustomerID(customer_id);
+      s.setCustomerID(custom_id);
 		} catch (SQLException ex) {
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
@@ -48,7 +47,7 @@ public class CustomerDAO_JDBC implements CustomerDAO {
 		try {
 			preparedStatement = dbConnection.prepareStatement(sql);
 
-			preparedStatement.setInt(1, Customer.getcustomer_id());
+			preparedStatement.setInt(1, Customer.getCustomerID());
 			preparedStatement.setString(2, Customer.getName());
       preparedStatement.setString(3, Customer.getAddress());
       preparedStatement.setString(4, Customer.getContact());
@@ -70,28 +69,28 @@ public class CustomerDAO_JDBC implements CustomerDAO {
 	}
 
   @Override
-	public void updateCustomer(int customer_id) {
-    static final Scanner scan = new Scanner(System.in);
-		PreparedStatement preparedStatement = null;
+	public void updateCustomer(Customer customer) {
+		PreparedStatement prepareStatement = null;
 		String sql;
     try{
+			int id = customer.getCustomerID();
     System.out.print("New name: ");
     String newName = scan.nextLine();
     System.out.print("New contact: ");
     String newContact = scan.nextLine();
     System.out.print("New address: ");
     String newAddress = scan.nextLine();
-    stmt = conn.prepareStatement("UPDATE Customer SET name=(?), contact=(?), address=(?) WHERE customer_id=(?)");
-    stmt.setInt(4, id);
-    stmt.setString(1, newName);
-    stmt.setString(2, newContact);
-    stmt.setString(3, newAddress);
+    prepareStatement = dbConnection.prepareStatement("UPDATE Customer SET name=(?), contact=(?), address=(?) WHERE customer_id=(?)");
+		prepareStatement.setInt(4, id);
+    prepareStatement.setString(1, newName);
+    prepareStatement.setString(2, newContact);
+    prepareStatement.setString(3, newAddress);
 		} catch (SQLException e) {
  			System.out.println(e.getMessage());
  		}
 		try{
-			if (preparedStatement != null) {
-				preparedStatement.close();
+			if (prepareStatement != null) {
+				prepareStatement.close();
 			}
 		} catch (SQLException e) {
  			System.out.println(e.getMessage());
@@ -101,26 +100,25 @@ public class CustomerDAO_JDBC implements CustomerDAO {
 	@Override
 	public ArrayList<Account> getAllAccounts(int customer_id) {
 		String sql;
-		Statement stmt = null;
+		PreparedStatement stmt = null;
 		ArrayList<Account> AccountList = new ArrayList<Account>();
 		try{
-			stmt = dbConnection.createStatement();
-			sql = "SELECT * FROM Account WHERE customer_id = (?)";
+			stmt = dbConnection.prepareStatement("SELECT * FROM Account WHERE account_customer_id = (?)");
 			stmt.setInt(1, customer_id);
-			ResultSet rs = stmt.executeQuery(sql);
+			ResultSet rs = stmt.executeQuery();
 			while(rs.next()){
 				//Retrieve by column name
 				Account s = new Account();
 				int account_customer_id  = rs.getInt("account_customer_id");
 				int accountnumber = rs.getInt("accountnumber");
-				Date createdate=rs.getString("createddate");
+				// Date createdate=rs.getDate("createddate");
 				int branch_id=rs.getInt("account_branch_id");
-				int balance = rs.getInt("balance")
+				int balance = rs.getInt("balance");
 
 				s.setCustomerID(account_customer_id);
 				s.setAccountNumber(accountnumber);
-				s.setDate(createdate);
-				s.setBranchId(branch_id);
+				// s.setDate(createdate);
+				s.setBranchID(branch_id);
 				s.setBalance(balance);
 
 				AccountList.add(s);
@@ -142,8 +140,8 @@ public class CustomerDAO_JDBC implements CustomerDAO {
 		Statement stmt = null;
 		ArrayList<Loan> loanList = new ArrayList<Loan>();
 		ArrayList<Account> accountlist = getAllAccounts(customer_id);
-		AccountDAO_JDBC acc =new AccountDAO_JDBC();
-		for(auto s:accountlist){
+		AccountDAO acc = new AccountDAO_JDBC(dbConnection);
+		for(Account s:accountlist){
 			ArrayList<Loan> l = new ArrayList<Loan>();
 			l=acc.getLoans(s);
 			loanList.addAll(l);
@@ -158,30 +156,34 @@ public class CustomerDAO_JDBC implements CustomerDAO {
 		Statement stmt = null;
 		ArrayList<Transaction> transList = new ArrayList<Transaction>();
 		ArrayList<Account> accountlist = getAllAccounts(customer_id);
-		AccountDAO_JDBC acc =new AccountDAO_JDBC();
-		for(auto s:accountlist){
+		AccountDAO acc = new AccountDAO_JDBC(dbConnection);
+		for(Account s:accountlist){
 			ArrayList<Transaction> t = acc.getTransactions(s);
 			transList.addAll(t);
 		}
 		// Add exception handling when there is no matching record
+		for(Transaction s:transList){
+			s.print();
+		}
 		return transList;
 	}
 
 
   @Override
-	public void deleteCustomer(int customer_id) {
+	public void deleteCustomer(Customer customer) {
     PreparedStatement stmt = null;
+		int custm_id =  customer.getCustomerID();
     try {
-      stmt = conn.prepareStatement("DELETE FROM Customer WHERE id=(?)");
-      stmt.setInt(1, customer_id);
+      stmt = dbConnection.prepareStatement("DELETE FROM Customer WHERE id=(?)");
+      stmt.setInt(1, custm_id);
       stmt.executeUpdate();
       System.out.println("Deleted row successfully.");
     } catch (SQLException e) {
  			System.out.println(e.getMessage());
  		}
 		try{
-			if (preparedStatement != null) {
-				preparedStatement.close();
+			if (stmt != null) {
+				stmt.close();
 			}
 		} catch (SQLException e) {
  			System.out.println(e.getMessage());

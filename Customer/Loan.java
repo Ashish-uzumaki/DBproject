@@ -17,21 +17,21 @@ public class Loan{
     manager_id = mgr_id;
 
   }
-  public int getId() { return id; }
-  public void setId(int loan_id){ id = loan_id; }
-  
+  public int getID() { return id; }
+  public void setID(int loan_id){ id = loan_id; }
+
   public int getAmount() { return amount; }
   public void setAmount(int amo){ amount=amo; }
-  
+
   public String getType() { return type; }
   public void setType(String s){ type = s; }
 
-  public int getAccountId() { return account_id; }
-  public void setAccountId(int s){ account_id = s; }
-  
-  public int getManagerId() { return manager_id; }
-  public void setManagerId(int s){ manager_id = s; }
-  
+  public int getAccountID() { return account_id; }
+  public void setAccountID(int s){ account_id = s; }
+
+  public int getManagerID() { return manager_id; }
+  public void setManagerID(int s){ manager_id = s; }
+
 
 	public void print(){ System.out.println("Id=" + id); System.out.println("amount =" + amount);}
 };

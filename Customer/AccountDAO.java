@@ -1,11 +1,12 @@
 import java.lang.*;
 import java.util.List;
+import java.util.ArrayList;
 
-public interface LoanDAO {
+public interface AccountDAO {
 	public Account getAccountDetails(int accno);
 	public void CreateAccount(Account a);
-	public void DeductMoney(int accno,int amount);
-	public void AddMoney(int accno,int amount);
+	public void DeductMoney(int accno,float amount);
+	public void AddMoney(int accno,float amount);
 	public ArrayList<Transaction> getTransactions(Account account);
 	public ArrayList<Loan> getLoans(Account account);
 }

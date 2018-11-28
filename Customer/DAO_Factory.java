@@ -1,5 +1,6 @@
 import java.lang.*;
 import java.sql.*;
+import java.util.*;
 /*
 	Methods to be called in the following order:
 	1. activateConnection
@@ -11,7 +12,7 @@ public class DAO_Factory{
 
 	// Modify the DB_URL string, userid and password depending upon the database you want to connect to
 	// In the following string, you are connecting a adatabase named "daoproject"
-	static final String DB_URL = "jdbc:mysql://localhost/companydb";
+	static final String DB_URL = "jdbc:mysql://localhost/bankdb";
 	static final String USER = "root";
 	static final String PASS = "";
 
@@ -20,6 +21,10 @@ public class DAO_Factory{
 	// You can add additional DAOs here as needed. Generally one DAO per class
 	CustomerDAO customerDAO = null;
 	TransactionDAO trans = null;
+	AccountDAO acc = null;
+	// EnsuranceDAO ens = null;
+	LoanDAO loan = null;
+
 	boolean activeConnection = false;
 
 	public DAO_Factory()
@@ -53,10 +58,41 @@ public class DAO_Factory{
 		if( activeConnection == false )
 			throw new Exception("Connection not activated...");
 
-		if( customerDAO == null )
+		if( customerDAO == null ){
 			customerDAO = new CustomerDAO_JDBC( dbconnection );
+		}
 
 		return customerDAO;
+	}
+	public AccountDAO getAccountDAO() throws Exception
+	{
+		if( activeConnection == false )
+			throw new Exception("Connection not activated...");
+
+		if( acc == null )
+			acc = new AccountDAO_JDBC( dbconnection );
+
+		return acc;
+	}
+	public TransactionDAO getTransactionDAO() throws Exception
+	{
+		if( activeConnection == false )
+			throw new Exception("Connection not activated...");
+
+		if( trans == null )
+			trans = new TransactionDAO_JDBC( dbconnection );
+
+		return trans;
+	}
+	public LoanDAO getLoanDAO() throws Exception
+	{
+		if( activeConnection == false )
+			throw new Exception("Connection not activated...");
+
+		if( loan == null )
+			loan = new LoanDAO_JDBC( dbconnection );
+
+		return loan;
 	}
 	public void deactivateConnection()
 	{
@@ -67,6 +103,9 @@ public class DAO_Factory{
 				dbconnection.close();
 				dbconnection = null;
 				customerDAO = null;
+				loan = null;
+				acc = null;
+				trans = null;
 			}
 			catch (SQLException ex) {
 			    // handle any errors

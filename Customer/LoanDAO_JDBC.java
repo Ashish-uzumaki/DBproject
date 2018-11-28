@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
-
+import java.util.*;
 
 public class LoanDAO_JDBC implements LoanDAO {
 	Connection dbConnection;
@@ -32,11 +32,11 @@ public class LoanDAO_JDBC implements LoanDAO {
 				int account_id=rs.getInt("loan_account_id");
 				int manager_id=rs.getInt("loan_manager_id");
 
-				s.setId(loan_id);
+				s.setID(loan_id);
 				s.setAmount(amount);
 				s.setType(type);
-				s.setAccountId(account_id);
-				s.setManagerId(manager_id);
+				s.setAccountID(account_id);
+				s.setManagerID(manager_id);
 
 				break;
 				// Add exception handling here if more than one row is returned
@@ -104,16 +104,16 @@ public class LoanDAO_JDBC implements LoanDAO {
 
 		try {
 			preparedStatement = dbConnection.prepareStatement(sql);
-			preparedStatement.setInt(1, a.getId());
+			preparedStatement.setInt(1, a.getID());
 			preparedStatement.setInt(2, a.getAmount());
-    		preparedStatement.setString(3, a.getType());
-    		preparedStatement.setInt(4, a.getAccountId());
-        	preparedStatement.setInt(5, a.getManagerId());
+  		preparedStatement.setString(3, a.getType());
+  		preparedStatement.setInt(4, a.getAccountID());
+    	preparedStatement.setInt(5, a.getManagerID());
 
 			// execute insert SQL stetement
 			preparedStatement.executeUpdate();
 
-			System.out.println("Loan: Id " + a.getId() + ", added to the database");
+			System.out.println("Loan: Id " + a.getID() + ", added to the database");
 		} catch (SQLException e) {
  			System.out.println(e.getMessage());
  		}

@@ -14,8 +14,8 @@ public class CustomerScreen{
 			CustomerDAO cdao = daoFactory.getCustomerDAO();
       LoanDAO dao = daoFactory.getLoanDAO();
       AccountDAO adao = daoFactory.getAccountDAO();
-      EnsuranceDAO edao = daoFactory.getEnsuranceDAO();
-      Transaction tdao = daoFactory.getTransactionDAO();
+      // EnsuranceDAO edao = daoFactory.getEnsuranceDAO();
+      TransactionDAO tdao = daoFactory.getTransactionDAO();
       boolean cnt = true;
       System.out.println("Insert Customer_ID:");
       int id = scan.nextInt();
@@ -34,23 +34,23 @@ public class CustomerScreen{
 
         switch(opt) {
           case 1:
-            tdao.getTransactionDetails(id);
+            cdao.getTransactionDetails(id);
             break;
 
           case 2:
-            adao.getAccountDetails(id);
+            cdao.getAllAccounts(id);
             break;
 
           case 3:
-            ldao.getLoanDetails(id);
+            // cdao.getLoanDetails(id);
             break;
 
           case 4:
-            cdao.getEnsuranceDetails(id);
+            // cdao.getEnsuranceDetails(id);
             break;
 
           case 5:
-            tdao.DoTransfer(id);
+            // cdao.DoTransfer(id);
             break;
 
           case 6:

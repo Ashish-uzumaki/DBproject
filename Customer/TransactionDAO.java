@@ -1,10 +1,10 @@
 import java.lang.*;
-import java.util.List;
+import java.util.*;
 
 public interface TransactionDAO {
 	public void addTransaction(Transaction transaction);
-  public List<Transaction> findAll();
+  // public List<Transaction> findAll();
 	public Transaction getTransactionById(int transaction_id);
-  public List<Transaction> getTransactionByDate();
-	public List<Transaction> getTransactionByAccount();
+  // public ArrayList<Transaction> getTransactionByDate();
+	public ArrayList<Transaction> getTansactionByAccount(Account s);
 }

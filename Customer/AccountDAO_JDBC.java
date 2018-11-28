@@ -30,13 +30,13 @@ public class AccountDAO_JDBC implements AccountDAO {
 				int  accountnumber = rs.getInt("accountnumber");
 				int account_branch_id = rs.getInt("account_branch_id");
 				int account_customer_id = rs.getInt("account_customer_id");
-				String date = rs.getDate("date");
+				// Date date = rs.getDate("date");
 
 				a.setAccountNumber(accountnumber);
 				a.setBalance(balance);
-				a.setDate(date);
-				a.setCustomerId(account_customer_id);
-				a.getBranchId(account_branch_id);
+				// a.setDate(date);
+				a.setCustomerID(account_customer_id);
+				a.setBranchID(account_branch_id);
 
 				break;
 				// Add exception handling here if more than one row is returned
@@ -57,15 +57,15 @@ public class AccountDAO_JDBC implements AccountDAO {
 	public void CreateAccount(Account a) {
 		PreparedStatement preparedStatement = null;
 		String sql;
-		sql = "INSERT INTO Account(accountnumber, balance, date, account_customer_id, account_branch_id) values (?,?,?,?,?)";
+		sql = "INSERT INTO Account(accountnumber, balance, account_customer_id, account_branch_id) values (?,?,?,?)";
 
 		try {
 			preparedStatement = dbConnection.prepareStatement(sql);
 			preparedStatement.setInt(1, a.getAccountNumber());
-			preparedStatement.setInt(2, a.getBalance());
-    		preparedStatement.setString(3, a.getDate());
-    		preparedStatement.setInt(4, a.getCustomerId());
-        	preparedStatement.setInt(5, a.getBranchId());
+			preparedStatement.setFloat(2, a.getBalance());
+  		// preparedStatement.setDate(3, a.getDate());
+  		preparedStatement.setInt(3, a.getCustomerID());
+    	preparedStatement.setInt(4, a.getBranchID());
 
 			// execute insert SQL stetement
 			preparedStatement.executeUpdate();
@@ -84,7 +84,7 @@ public class AccountDAO_JDBC implements AccountDAO {
  		}
 	}
 
-	public void DeductMoney(int accno,int amount) {
+	public void DeductMoney(int accno,float amount) {
 		Account a = new Account();
 		String sql;
 		Statement stmt = null;
@@ -101,23 +101,25 @@ public class AccountDAO_JDBC implements AccountDAO {
 				int  accountnumber = rs.getInt("accountnumber");
 				int account_branch_id=rs.getInt("account_branch_id");
 				int account_customer_id=rs.getInt("account_customer_id");
-				Date date=rs.getDate("date");
+				// Date date=rs.getDate("date");
 
 				a.setAccountNumber(accountnumber);
 				a.setBalance(balance);
-				a.setDate(date);
-				a.setCustomerId(account_customer_id);
-				a.getBranchId(account_branch_id);
+				// a.setDate(date);
+				a.setCustomerID(account_customer_id);
+				a.setBranchID(account_branch_id);
 
 				break;
 				// Add exception handling here if more than one row is returned
 			}
+			PreparedStatement stmt1= null;
+			stmt1 = dbConnection.prepareStatement("Update Account set amount = '"+(a.getBalance()-amount)+"' where accountnumber = '"+a.getAccountNumber());
+			stmt1.executeUpdate();
+			System.out.println("Money Deducted from account number: " + a.getAccountNumber());
 
-			sql_deduct="Update Account set amount = "+(a.getBalance()-amount)+" where accountnumber = "+a.getAccountNumber();
-			stmt.executeUpdate(sql_deduct);
-
-		    System.out.println("Money Deducted from account number: " + a.getAccountNumber());
-
+			// sql_deduct="Update Account set amount = '"+(a.getBalance()-amount)+"' where accountnumber = '"+a.getAccountNumber()+"'";
+			// stmt.executeUpdate(sql_deduct);
+			// System.out.println("Money Added to account number: " + a.getAccountNumber());
 		}
 		catch (SQLException ex) {
 		    // handle any errors
@@ -129,7 +131,7 @@ public class AccountDAO_JDBC implements AccountDAO {
 	}
 
 
-public void AddMoney(int accno,int amount) {
+public void AddMoney(int accno,float amount) {
 		Account a = new Account();
 		String sql;
 		Statement stmt = null;
@@ -138,32 +140,27 @@ public void AddMoney(int accno,int amount) {
 			stmt = dbConnection.createStatement();
 			sql = "select * from Account where accountnumber=" + accno;
 			ResultSet rs = stmt.executeQuery(sql);
-
-			//STEP 5: Extract data from result set
-
-
 			while(rs.next()){
 				//Retrieve by column name
 				float balance  = rs.getFloat("balance");
 				int  accountnumber = rs.getInt("accountnumber");
 				int account_branch_id=rs.getInt("account_branch_id");
 				int account_customer_id=rs.getInt("account_customer_id");
-				Date date=rs.getDate("date");
+				// Date date=rs.getDate("date");
 
 				a.setAccountNumber(accountnumber);
 				a.setBalance(balance);
-				a.setDate(date);
-				a.setCustomerId(account_customer_id);
-				a.getBranchId(account_branch_id);
+				// a.setDate(date);
+				a.setCustomerID(account_customer_id);
+				a.setBranchID(account_branch_id);
 
 				break;
 				// Add exception handling here if more than one row is returned
 			}
-
-			sql_deduct="Update Account set amount = "+(a.getBalance()+amount)+" where accountnumber = "+a.getAccountNumber();
-			stmt.executeUpdate(sql_deduct);
-
-		    System.out.println("Money Added to account number: " + a.getAccountNumber());
+			PreparedStatement stmt1= null;
+			stmt1 = dbConnection.prepareStatement("Update Account set amount = "+(a.getBalance()+amount)+" where accountnumber = "+a.getAccountNumber());
+			stmt1.executeUpdate();
+	    System.out.println("Money Added to account number: " + a.getAccountNumber());
 
 		}
 		catch (SQLException ex) {
@@ -190,16 +187,16 @@ public void AddMoney(int accno,int amount) {
 				//Retrieve by column name
 				Loan s = new Loan();
 				int loan_id  = rs.getInt("loan_id");
-				int  amount = rs.getInt("amount");
+				float  amount = rs.getFloat("amount");
 				String type=rs.getString("type");
 				int account_id=rs.getInt("loan_account_id");
 				int manager_id=rs.getInt("loan_manager_id");
 
-				s.setId(loan_id);
-				s.setAmount(amount);
+				s.setID(loan_id);
+				s.setAmount((int)amount);
 				s.setType(type);
-				s.setAccountId(account_id);
-				s.setManagerId(manager_id);
+				s.setAccountID(account_id);
+				s.setManagerID(manager_id);
 
 				loans.add(s);
 				// Add exception handling here if more than one row is returned
@@ -224,20 +221,20 @@ public void AddMoney(int accno,int amount) {
 		int accountnumber = account.getAccountNumber();
 		try{
 			stmt = dbConnection.createStatement();
-			sql = "select * from Transaction where accountnumber=" + accountnumber;
+			sql = "select * from Transaction where transaction_accountnumber=" + accountnumber;
 			ResultSet rs = stmt.executeQuery(sql);
 			//STEP 5: Extract data from result set
 			while(rs.next()){
 				//Retrieve by column name
 				Transaction s = new Transaction();
 
-				String date = rs.getDate("transactiondate");
-				int amount = rs.getAmount("amount");
-				String account_no = rs.getString("transaction_accountnumber");
+				// Date date = rs.getDate("transactiondate");
+				float amount = rs.getFloat("amount");
+				int account_no = rs.getInt("transaction_accountnumber");
 				int transaction_id  = rs.getInt("transaction_id");
 
-				s.setDate(date);
-				s.setAmount(amount);
+				// s.setDate(date);
+				s.setAmount((int)amount);
 				s.setAccountNo(account_no);
 				s.setTransactionID(transaction_id);
 
