@@ -9,4 +9,5 @@ public interface AccountDAO {
 	public void AddMoney(int accno,float amount);
 	public ArrayList<Transaction> getTransactions(Account account);
 	public ArrayList<Loan> getLoans(Account account);
+	public void TransferMoney(int sender,int reciever,float amount);
 }

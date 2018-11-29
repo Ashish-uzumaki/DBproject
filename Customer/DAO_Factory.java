@@ -12,7 +12,7 @@ public class DAO_Factory{
 
 	// Modify the DB_URL string, userid and password depending upon the database you want to connect to
 	// In the following string, you are connecting a adatabase named "daoproject"
-	static final String DB_URL = "jdbc:mysql://localhost/bankdb";
+	static final String DB_URL = "jdbc:mysql://localhost/mybank";
 	static final String USER = "root";
 	static final String PASS = "";
 

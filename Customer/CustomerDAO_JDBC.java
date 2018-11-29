@@ -162,12 +162,30 @@ public class CustomerDAO_JDBC implements CustomerDAO {
 			transList.addAll(t);
 		}
 		// Add exception handling when there is no matching record
-		for(Transaction s:transList){
-			s.print();
-		}
+		// for(Transaction s:transList){
+		// 	s.print();
+		// }
 		return transList;
 	}
 
+	@Override
+	public void SendMoney(int custom_id){
+	  System.out.println("Input your account number:");
+	  int sender =scan.nextInt();
+	  scan.nextLine();
+	  System.out.println("Input reciever's account number:");
+	  int reciever =scan.nextInt();
+	  scan.nextLine();
+	  System.out.println("Input your ammount:");
+	  float amt =scan.nextFloat();
+	  scan.nextLine();
+	  AccountDAO acc = new AccountDAO_JDBC(dbConnection);
+		TransactionDAO tra = new TransactionDAO_JDBC(dbConnection);
+		Transaction tran = new Transaction("sent",(int)amt,sender);
+	  acc.TransferMoney(sender,reciever,amt);
+		tra.addTransaction(tran);
+	  System.out.println("....Money Has been Transfered...");
+	}
 
   @Override
 	public void deleteCustomer(Customer customer) {

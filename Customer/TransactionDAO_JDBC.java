@@ -44,12 +44,13 @@ public class TransactionDAO_JDBC implements TransactionDAO {
 	public void addTransaction(Transaction Transaction) {
 		PreparedStatement preparedStatement = null;
 		String sql;
-		sql = "insert into Transaction(transaction_id, transaction_accountnumber,amount ) values (?,?,?)";
+		sql = "insert into Transaction(type,transaction_accountnumber,amount ) values (?,?,?)";
 		try {
 			preparedStatement = dbConnection.prepareStatement(sql);
 
-			preparedStatement.setInt(1, Transaction.getTransactionID());
+			// preparedStatement.setInt(1, Transaction.getTransactionID());
 			// preparedStatement.setDate(2, Transaction.getDate());
+			preparedStatement.setString(1, Transaction.getType());
       preparedStatement.setInt(2, Transaction.getAccountNo());
       preparedStatement.setInt(3, Transaction.getAmount());
 			// execute insert SQL stetement
@@ -82,6 +83,7 @@ public class TransactionDAO_JDBC implements TransactionDAO {
 				Transaction t = new Transaction();
 				int transaction_id  = rs.getInt("transaction_id ");
 				int transaction_accountnumber = rs.getInt("transaction_accountnumber");
+				String type = rs.getString("type");
 				// Date transactiondate=rs.getDate("transactiondate");
 				int amount = rs.getInt("amount");
 
@@ -89,6 +91,7 @@ public class TransactionDAO_JDBC implements TransactionDAO {
 				t.setTransactionID(transaction_id);
 				t.setAccountNo(transaction_accountnumber);
 				t.setAmount(amount);
+				t.setType(type);
 
 				TransactionList.add(t);
 				// Add exception handling here if more than one row is returned

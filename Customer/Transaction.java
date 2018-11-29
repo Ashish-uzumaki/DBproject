@@ -7,10 +7,10 @@ public class Transaction{
   int account_no;
   int amount;
 	public Transaction() { }
-	public Transaction (String typ,int id,int acc_no,int amt){
+	public Transaction (String typ,int amt,int acc_no){
      // date = date;
-     type = typ;
-     transaction_id = id;
+     type = "transfer";
+     // transaction_id = id;
      account_no = acc_no;
      amount = amt;
      }
@@ -45,10 +45,13 @@ public class Transaction{
          account_no = s;
       }
 	public void print(){
-     System.out.println("Transaction_id" + transaction_id);
+
+     System.out.println("Transaction_id=" + transaction_id);
+     System.out.println("Money sent from:");
      System.out.println("Accountno=" + account_no);
      System.out.println("Amount=" + amount);
      // System.out.println("Date=" + date);
-     System.out.println("type=" + type);
+     // System.out.println("type=" + type);
+     System.out.println("--------");
    }
 };

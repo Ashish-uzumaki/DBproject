@@ -107,7 +107,7 @@ public class AccountDAO_JDBC implements AccountDAO {
 				// Add exception handling here if more than one row is returned
 			}
 			PreparedStatement stmt1= null;
-			stmt1 = dbConnection.prepareStatement("Update Account set amount = '"+(a.getBalance()-amount)+"' where accountnumber = '"+a.getAccountNumber());
+			stmt1 = dbConnection.prepareStatement("Update Account set balance = '"+(a.getBalance()-amount)+"' where accountnumber = "+a.getAccountNumber());
 			stmt1.executeUpdate();
 			System.out.println("Money Deducted from account number: " + a.getAccountNumber());
 
@@ -152,10 +152,9 @@ public void AddMoney(int accno,float amount) {
 				// Add exception handling here if more than one row is returned
 			}
 			PreparedStatement stmt1= null;
-			stmt1 = dbConnection.prepareStatement("Update Account set amount = "+(a.getBalance()+amount)+" where accountnumber = "+a.getAccountNumber());
+			stmt1 = dbConnection.prepareStatement("Update Account set balance = '"+(a.getBalance()+amount)+"' where accountnumber = "+a.getAccountNumber());
 			stmt1.executeUpdate();
 	    System.out.println("Money Added to account number: " + a.getAccountNumber());
-
 		}
 		catch (SQLException ex) {
 		    // handle any errors
@@ -164,6 +163,13 @@ public void AddMoney(int accno,float amount) {
 		    System.out.println("VendorError: " + ex.getErrorCode());
 		}
 		// Add exception handling when there is no matching record
+	}
+	@Override
+	public void TransferMoney(int sender,int reciever,float amount){
+		// Transac
+		DeductMoney( sender, amount);
+		AddMoney( reciever, amount);
+
 	}
 
 	@Override
@@ -174,7 +180,7 @@ public void AddMoney(int accno,float amount) {
 		ArrayList<Loan> loans = new ArrayList<Loan>();
 		try{
 			stmt = dbConnection.createStatement();
-			sql = "select * from Loan where accountnumber=" + accountnumber;
+			sql = "select * from Loan where loan_account_id=" + accountnumber;
 			ResultSet rs = stmt.executeQuery(sql);
 			//STEP 5: Extract data from result set
 			while(rs.next()){
